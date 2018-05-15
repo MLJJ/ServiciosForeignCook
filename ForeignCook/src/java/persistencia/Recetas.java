@@ -28,8 +28,8 @@ import javax.xml.bind.annotation.XmlTransient;
 /**
  *
  * @author Miguel Leonardo Jimenez Jimenez
- * @date 13/05/2018
- * @time 08:08:09 PM
+ * @date 15/05/2018
+ * @time 12:21:56 PM
  */
 @Entity
 @Table(name = "recetas")
@@ -40,6 +40,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Recetas.findByNombreReceta", query = "SELECT r FROM Recetas r WHERE r.nombreReceta = :nombreReceta")
     , @NamedQuery(name = "Recetas.findByIngredientes", query = "SELECT r FROM Recetas r WHERE r.ingredientes = :ingredientes")
     , @NamedQuery(name = "Recetas.findByProcedimiento", query = "SELECT r FROM Recetas r WHERE r.procedimiento = :procedimiento")
+    , @NamedQuery(name = "Recetas.findByCategoria", query = "SELECT r FROM Recetas r WHERE r.categoria = :categoria")
     , @NamedQuery(name = "Recetas.findByLikes", query = "SELECT r FROM Recetas r WHERE r.likes = :likes")
     , @NamedQuery(name = "Recetas.findByNombreImagen", query = "SELECT r FROM Recetas r WHERE r.nombreImagen = :nombreImagen")
     , @NamedQuery(name = "Recetas.findByLinkVideo", query = "SELECT r FROM Recetas r WHERE r.linkVideo = :linkVideo")})
@@ -66,6 +67,9 @@ public class Recetas implements Serializable {
     @Size(min = 1, max = 5000)
     @Column(name = "procedimiento")
     private String procedimiento;
+    @Size(max = 50)
+    @Column(name = "categoria")
+    private String categoria;
     @Column(name = "likes")
     private Integer likes;
     @Size(max = 10)
@@ -124,6 +128,14 @@ public class Recetas implements Serializable {
 
     public void setProcedimiento(String procedimiento) {
         this.procedimiento = procedimiento;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
     }
 
     public Integer getLikes() {

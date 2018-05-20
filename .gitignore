@@ -1,0 +1,7 @@
+/Ejemplo/nbproject/private/
+/Ejemplo/build/
+/ForeignCook/dist/
+ForeignCook/nbproject/private/private.xml
+ForeignCook/nbproject/private/private.properties
+ForeignCook/build/web/WEB-INF/classes/persistencia/Recetas.rapt
+*.rapt

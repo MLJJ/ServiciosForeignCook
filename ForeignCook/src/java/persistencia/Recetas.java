@@ -46,6 +46,10 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Recetas.findByLinkVideo", query = "SELECT r FROM Recetas r WHERE r.linkVideo = :linkVideo")})
 public class Recetas implements Serializable {
 
+    @Size(max = 5000)
+    @Column(name = "descripcion")
+    private String descripcion;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -202,6 +206,14 @@ public class Recetas implements Serializable {
     @Override
     public String toString() {
         return "persistencia.Recetas[ idReceta=" + idReceta + " ]";
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
 }

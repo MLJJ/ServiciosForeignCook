@@ -18,6 +18,7 @@ likes int,
 nombreImagen varchar(10),
 linkVideo varchar(200),
 correo varchar(100),
+descripcion varchar(5000),
 foreign key (correo) references usuarios(correo)
 );
 

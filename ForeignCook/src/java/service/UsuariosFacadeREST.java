@@ -61,7 +61,7 @@ public class UsuariosFacadeREST extends AbstractFacade<Usuarios> {
     
     @GET
     @Path("iniciarSesion/{correo}/{contrasena}")
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.TEXT_PLAIN})
     public boolean iniciarSesion(@PathParam("correo") String correo, @PathParam("contrasena") String contrasena) {
         boolean validacion = true;
         EntityManager conexion = getEntityManager();

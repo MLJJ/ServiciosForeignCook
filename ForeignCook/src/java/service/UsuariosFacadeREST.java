@@ -20,7 +20,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import persistencia.Usuarios;
-import sun.misc.BASE64Decoder;
+import java.util.Base64;
 
 /**
  *
@@ -68,7 +68,7 @@ public class UsuariosFacadeREST extends AbstractFacade<Usuarios> {
         try{
                 //String ruta = new File(".").getCanonicalPath() + "/fotos/" + usuario.getCorreo() + ".jpg";
                 
-                byte arr[] = new BASE64Decoder().decodeBuffer(usuario.getNombreImagen());
+                byte arr[] = Base64.getDecoder().decode(usuario.getNombreImagen());
                 int tamaño = arr.length;
                 FileOutputStream arch = new FileOutputStream("C:\\Users\\Leonardo\\Documents\\GitHub\\ServiciosForeignCook\\ForeignCook\\web\\imagenesUsuarios\\"+usuario.getCorreo());
                 arch.write(arr, 0, tamaño);

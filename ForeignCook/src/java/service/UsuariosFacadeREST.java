@@ -6,7 +6,6 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 import javax.ws.rs.Consumes;
@@ -30,7 +29,6 @@ import sun.misc.BASE64Decoder;
  * @time 08:08:59 PM
  */
 @Stateless
-@MultipartConfig(location="/tmp", fileSizeThreshold=1024*1024,maxFileSize=1024*1024*5, maxRequestSize=1024*1024*5*5)
 @Path("persistencia.usuarios")
 public class UsuariosFacadeREST extends AbstractFacade<Usuarios> {
 
@@ -72,7 +70,7 @@ public class UsuariosFacadeREST extends AbstractFacade<Usuarios> {
                 
                 byte arr[] = new BASE64Decoder().decodeBuffer(usuario.getNombreImagen());
                 int tamaño = arr.length;
-                FileOutputStream arch = new FileOutputStream("C:\\Users\\Leonardo\\Documents\\GitHub\\ServiciosForeignCook\\ForeignCook\\web\\fotos\\imagen5.jpg");
+                FileOutputStream arch = new FileOutputStream("C:\\Users\\Leonardo\\Documents\\GitHub\\ServiciosForeignCook\\ForeignCook\\web\\imagenesUsuarios\\"+usuario.getCorreo());
                 arch.write(arr, 0, tamaño);
                 arch.close();
                 output = "{\"respuesta\": \"OK\"}";
@@ -90,8 +88,7 @@ public class UsuariosFacadeREST extends AbstractFacade<Usuarios> {
         String output = "";
         try{
             if (request.getParts().size() > 0){
-                Part parte = (Part) request.getParts();
-                //String path = new File(".").getCanonicalPath() + "/fotos/" + id + ".jpg";
+                Part parte = (Part) request.getParts().toArray()[0];
                 String path = "C:\\Users\\Leonardo\\Documents\\GitHub\\ServiciosForeignCook\\ForeignCook\\web\\fotos\\"+id+".jpg";
                 InputStream is = parte.getInputStream();
                 int tam = (int) parte.getSize();

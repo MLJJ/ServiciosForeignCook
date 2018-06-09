@@ -1,5 +1,6 @@
 package service;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -14,8 +15,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import persistencia.Recetas;
 import persistencia.Usuarios;
+import java.util.Base64;
 
 /**
  *
@@ -107,6 +110,27 @@ public class RecetasFacadeREST extends AbstractFacade<Recetas> {
         }
         
         return recetas;
+    }
+    
+    @POST
+    @Path("imagenReceta")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response uploadFile(Recetas receta){
+        String output = "";
+        try{
+                //String ruta = new File(".").getCanonicalPath() + "/fotos/" + usuario.getCorreo() + ".jpg";
+                
+                byte arr[] = Base64.getDecoder().decode(receta.getNombreImagen());
+                int tamaño = arr.length;
+                FileOutputStream arch = new FileOutputStream("C:\\Users\\Leonardo\\Documents\\GitHub\\ServiciosForeignCook\\ForeignCook\\web\\imagenesRecetas\\"+receta.getIdReceta()+".jpg");
+                arch.write(arr, 0, tamaño);
+                arch.close();
+                output = "{\"respuesta\": \"OK\"}";
+            
+        }catch(Exception exception){
+            output = "{\"respuesta\": \"" + exception.toString() + "\"}";
+        }
+        return Response.status(200).entity(output).build();
     }
 
     @GET

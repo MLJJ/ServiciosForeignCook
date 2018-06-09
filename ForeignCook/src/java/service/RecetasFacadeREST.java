@@ -132,6 +132,23 @@ public class RecetasFacadeREST extends AbstractFacade<Recetas> {
         }
         return Response.status(200).entity(output).build();
     }
+    
+      
+    @GET
+    @Path("buscarPorUsuario/{correo}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<Recetas> buscarRecetasPorCorreo(@PathParam("correo") String correo) {
+        List<Recetas> recetas = null;
+        EntityManager conexion = getEntityManager();
+        try {
+            recetas = conexion.createQuery("SELECT r FROM Recetas r WHERE r.correo.correo = :thisCorreo").setParameter("thisCorreo", correo).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            recetas = new ArrayList();
+        }
+        return recetas;
+    }
+
 
     @GET
     @Path("count")

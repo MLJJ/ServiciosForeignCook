@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response;
 import persistencia.Recetas;
 import persistencia.Usuarios;
 import java.util.Base64;
+import sun.misc.BASE64Decoder;
 
 /**
  *
@@ -43,15 +44,25 @@ public class RecetasFacadeREST extends AbstractFacade<Recetas> {
     public void create(Recetas entity) {
         super.create(entity);
     }
-    
+
     @POST
     @Path("{correo}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public void guardarReceta(@PathParam("correo") String correo, Recetas receta) {
-        EntityManager conexion = getEntityManager();
-        Usuarios usuario = conexion.find(Usuarios.class,correo);
-        receta.setCorreo(usuario);
-        super.create(receta);
+    @Produces({MediaType.APPLICATION_JSON})
+    public Recetas guardarReceta(@PathParam("correo") String correo, Recetas receta) {
+        Recetas salida = null;
+
+        try {
+            EntityManager conexion = getEntityManager();
+            Usuarios usuario = conexion.find(Usuarios.class, correo);
+            receta.setCorreo(usuario);
+            super.create(receta);
+            salida = receta;
+        } catch (Exception e) {
+
+        }
+
+        return salida;
     }
 
     @PUT
@@ -94,46 +105,45 @@ public class RecetasFacadeREST extends AbstractFacade<Recetas> {
     public List<Recetas> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }
-    
+
     @GET
     @Path("buscarPorNombre/{nombre}")
     @Produces({MediaType.APPLICATION_JSON})
     public List<Recetas> buscaRecetasPorNombre(@PathParam("nombre") String nombre) {
         List<Recetas> recetas = null;
-        String palabraClave = "%"+nombre+"%";
+        String palabraClave = "%" + nombre + "%";
         EntityManager conexion = getEntityManager();
-        
+
         try {
             recetas = conexion.createQuery("SELECT r FROM Recetas r WHERE r.nombreReceta LIKE :palabraClave").setParameter("nombreClave", palabraClave).getResultList();
         } catch (Exception e) {
             recetas = new ArrayList();
         }
-        
+
         return recetas;
     }
-    
+
     @POST
     @Path("imagenReceta")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response uploadFile(Recetas receta){
+    public Response uploadFile(Recetas receta) {
         String output = "";
-        try{
-                //String ruta = new File(".").getCanonicalPath() + "/fotos/" + usuario.getCorreo() + ".jpg";
-                
-                byte arr[] = Base64.getDecoder().decode(receta.getNombreImagen());
-                int tamaño = arr.length;
-                FileOutputStream arch = new FileOutputStream("C:\\Users\\Leonardo\\Documents\\GitHub\\ServiciosForeignCook\\ForeignCook\\web\\imagenesRecetas\\"+receta.getIdReceta()+".jpg");
-                arch.write(arr, 0, tamaño);
-                arch.close();
-                output = "{\"respuesta\": \"OK\"}";
-            
-        }catch(Exception exception){
+        try {
+            //String ruta = new File(".").getCanonicalPath() + "/fotos/" + usuario.getCorreo() + ".jpg";
+
+            byte arr[] = new BASE64Decoder().decodeBuffer(receta.getNombreImagen());
+            int tamaño = arr.length;
+            FileOutputStream arch = new FileOutputStream("C:\\Users\\Leonardo\\Documents\\GitHub\\ServiciosForeignCook\\ForeignCook\\web\\imagenesRecetas\\" + receta.getIdReceta() + ".jpg");
+            arch.write(arr, 0, tamaño);
+            arch.close();
+            output = "{\"respuesta\": \"OK\"}";
+
+        } catch (Exception exception) {
             output = "{\"respuesta\": \"" + exception.toString() + "\"}";
         }
         return Response.status(200).entity(output).build();
     }
-    
-      
+
     @GET
     @Path("buscarPorUsuario/{correo}")
     @Produces({MediaType.APPLICATION_JSON})
@@ -148,7 +158,6 @@ public class RecetasFacadeREST extends AbstractFacade<Recetas> {
         }
         return recetas;
     }
-
 
     @GET
     @Path("count")

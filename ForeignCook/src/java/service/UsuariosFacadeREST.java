@@ -21,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import persistencia.Usuarios;
 import java.util.Base64;
+import sun.misc.BASE64Decoder;
 
 /**
  *
@@ -50,8 +51,18 @@ public class UsuariosFacadeREST extends AbstractFacade<Usuarios> {
     @PUT
     @Path("{id}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public void edit(@PathParam("id") String id, Usuarios entity) {
-        super.edit(entity);
+    public Response edit(@PathParam("id") String id, Usuarios entity) {
+        String salida = "";
+        boolean validacion = true;
+        try{
+            super.edit(entity);
+            
+        }catch(Exception e){
+            validacion = false;
+        }
+        
+        salida = validacion?"{\"respuesta\": \"OK\"}":"{\"respuesta\": \"FAIL\"}";
+        return Response.status(200).entity(salida).build();
     }
 
     @DELETE
@@ -68,9 +79,9 @@ public class UsuariosFacadeREST extends AbstractFacade<Usuarios> {
         try{
                 //String ruta = new File(".").getCanonicalPath() + "/fotos/" + usuario.getCorreo() + ".jpg";
                 
-                byte arr[] = Base64.getDecoder().decode(usuario.getNombreImagen());
+                byte arr[] = new BASE64Decoder().decodeBuffer(usuario.getNombreImagen());
                 int tamaño = arr.length;
-                FileOutputStream arch = new FileOutputStream("C:\\Users\\Leonardo\\Documents\\GitHub\\ServiciosForeignCook\\ForeignCook\\web\\imagenesUsuarios\\"+usuario.getCorreo());
+                FileOutputStream arch = new FileOutputStream("C:\\Users\\Leonardo\\Documents\\GitHub\\ServiciosForeignCook\\ForeignCook\\web\\imagenesUsuarios\\"+usuario.getCorreo()+".jpg");
                 arch.write(arr, 0, tamaño);
                 arch.close();
                 output = "{\"respuesta\": \"OK\"}";
@@ -110,6 +121,7 @@ public class UsuariosFacadeREST extends AbstractFacade<Usuarios> {
     @Path("{id}")
     @Produces({MediaType.APPLICATION_JSON})
     public Usuarios find(@PathParam("id") String id) {
+        System.out.println("Entre");
         return super.find(id);
     }
     
